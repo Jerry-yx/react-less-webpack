@@ -1,4 +1,6 @@
-const webpack = require('webpack')
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 module.exports ={
 	entry: __dirname +'/app/index.js',//__dirname node.js全局变量 脚本所在目录
 	output: {
@@ -27,8 +29,20 @@ module.exports ={
 				exclude: /node_modules/ //排除不需要处理文件
 			},{
 				test:/\.css$/,
-				use: [
-					{
+				use: [{
+						loader: "style-loader"//将所有的计算后的样式加入页面中
+					},{
+						loader: 'css-loader',//能够使用类似@import 和 url(...)的方法
+						options: {
+							modules: true,
+							localIdentName: '[name]_[local]--[hash:base64:5]'//制定css类名格式 可防止局部css污染全局样式
+						}
+					}
+				]
+
+			},{
+				test: /\.less$/,
+				use:[{
 						loader: "style-loader"//将所有的计算后的样式加入页面中
 					},{
 						loader: 'css-loader',//能够使用类似@import 和 url(...)的方法
@@ -37,19 +51,16 @@ module.exports ={
 							localIdentName: '[name]_[local]--[hash:base64:5]'//制定css类名格式 可防止局部css污染全局样式
 						}
 					},{
-						loader:'postcss-loader'
+						loader:'less-loader'
+					},{
+						loader:'postcss-loader'//import得css也要用postcss-loader处理？？？
 					}
 				]
-
-			},{
-				test: /\.less$/,
-				use:{
-					loader:'less-loader'
-				}
 			}
 		]
 	},
 	plugins: [
-		new webpack.HotModuleReplacementPlugin()
+		new webpack.HotModuleReplacementPlugin(),
+		new HtmlWebpackPlugin({template:__dirname + "/app/index.tmpl.html"})
 	]
 };
