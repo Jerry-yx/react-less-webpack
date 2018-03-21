@@ -65,7 +65,7 @@ module.exports ={
 			template:__dirname + "/app/index.html",
 			title:"my html",
 			inject:'false',
-			date: new Date()
+			date: new Date() 
 		})
 	]
 };
